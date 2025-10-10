@@ -18,7 +18,7 @@ RevoShop is a modern e-commerce web application designed to showcase a fully fun
 It provides users with the ability to browse products, view detailed information, and manage their shopping cart within a clean and responsive interface.
 
 The project is built using Next.js and TypeScript, demonstrating key frontend development concepts such as state management, component reusability, and dynamic routing.
-RevoShop emphasizes both usability and scalability, making it a solid foundation for future development into a full-featured online store.evoshop is a ....
+RevoShop emphasizes both usability and scalability, making it a solid foundation for future development into a full-featured online store.
 
 ### Features
 - Dynamic Product Listing
