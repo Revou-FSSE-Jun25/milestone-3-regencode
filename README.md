@@ -22,40 +22,44 @@ RevoShop emphasizes both usability and scalability, making it a solid foundation
 
 ### Features
 - Dynamic Product Listing
+
 Displays products retrieved from an API, dynamically rendering item details, titles, and prices.
 
 - Product Details View
+
 Each product can be clicked to view detailed information on a dedicated page.
 
 - Shopping Cart Functionality
+
 Users can add, remove, and manage products in their shopping cart, with quantity updates and total calculation handled in real-time.
 
 - Global Cart Context
+
 Cart data is managed through React Context, allowing consistent updates across all components.
 
 - Responsive Design
+
 Optimized layout for desktop and mobile users, ensuring accessibility across devices.
 
 - Reusable Components
+
 Shared components (headers, product cards, cart items, etc.) for cleaner and more maintainable code.
 
 - TypeScript Type Safety
+
 All components and data models are typed for reliability and easier debugging.
 
 - API Integration
-Fetches real product data from a backend API, ensuring scalability for real-world applications.
+
+Fetches product data from Platzi Fake Store.
 
 ### Tech Stack
 
-Framework: Next.js
+Framework: Next.js and React
 
 Language: TypeScript
 
 Styling: Tailwind CSS
-
-Icons: Font Awesome
-
-State Management: React Context API
 
 Deployment: Vercel
 
