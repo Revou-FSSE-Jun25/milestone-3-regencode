@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import Header from "./components/Header";
 import { Product } from "./types";
 import ProductComponent from "./components/ProductComponent";
+import CarouselProductComponent from "./components/CarouselProductComponent";
 import HeaderCartModal from "./components/HeaderCartModal";
 
 export interface HomePageProps {
@@ -81,7 +82,7 @@ export const ClientView : React.FC<HomePageProps> = ({ products, carouselProduct
             <Header toggleCartModal={handleCartOpen} /> 
             { isCartModalOpen ? <HeaderCartModal /> : false }
             <section className="border border-white w-[70vw] min-w-[400px] h-[50vh] mx-auto my-5 overflow-hidden">
-            { carouselProduct ? <ProductComponent key={carouselProduct.id} {...carouselProduct} /> : false }
+            { carouselProduct ? <CarouselProductComponent key={carouselProduct.id} {...carouselProduct} /> : false }
             </section>
             <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-[70vw] min-w-[400px] mx-auto">
             {products.map((prop: Product) => (

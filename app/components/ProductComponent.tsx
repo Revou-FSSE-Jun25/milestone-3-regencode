@@ -28,7 +28,7 @@ const ProductComponent: React.FC<Product> = ({title, images, price, ...props}: P
 
     return (
         <div 
-        className="w-full h-full border border-white" 
+        className="w-full aspect-square border border-white" 
         >
             <img
             src={images[imageIndex]}
@@ -36,12 +36,12 @@ const ProductComponent: React.FC<Product> = ({title, images, price, ...props}: P
             className="w-full h-[70%] object-cover"
             />
             <div className="flex w-[90%] mx-auto justify-between">
-                <strong className="text-2xl">{title}</strong>
-                <p className="text-2xl">${price}</p>
+                <strong className="text-xl">{title}</strong>
+                <p className="text-xl">${price}</p>
             </div>
             <div className="flex h-[10%] gap-5 fit ml-[5%] mr-0">
                 <button
-                className="h-full aspect-[25/15] border border-white rounded-xl"
+                className="h-full aspect-[25/10] border border-white rounded-xl"
                 onClick={(e) => {
                     addCartItems({ title, images, price, ...props });
                     console.log("item added", title);
@@ -50,7 +50,7 @@ const ProductComponent: React.FC<Product> = ({title, images, price, ...props}: P
                     Add to cart...
                 </button>
                 <button
-                className="h-full aspect-[25/15] border border-white rounded-xl"
+                className="h-full aspect-[25/10] border border-white rounded-xl"
                 onClick={(e) => { console.log("go clicked"); router.push(`/products/${props.id}`) }}
                 >
                     Go to page
