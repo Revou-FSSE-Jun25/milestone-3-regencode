@@ -5,7 +5,7 @@ import React from "react";
 import { useContext } from "react";
 
 const ClientView = ({ ...product }: Product) => {
-    let cartItems = useContext(cartContext);
+    const { cartItems, addCartItems, removeCartItems }= useContext(cartContext);
     return (
         <section className="w-[85vw] mx-auto my-5">
             <div className="flex flex-col w-full h-[55vh] md:h-[65vh] lg:h-[90vh]"> 
@@ -20,7 +20,7 @@ const ClientView = ({ ...product }: Product) => {
                         <button className="border border-white mx-5">Share</button>
                         <button 
                         className="border border-white"
-                        onClick={() => {cartItems.push(product)}}>Add to Cart</button>
+                        onClick={(e) => {addCartItems(product)}}>Add to Cart</button>
                     </div>
                 </section>
             </div>

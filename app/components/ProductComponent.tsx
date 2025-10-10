@@ -24,13 +24,12 @@ export interface Product {
 const ProductComponent: React.FC<Product> = ({title, images, price, ...props}: Product) => {
     const [imageIndex, setImageIndex] = useState(0);
     const router = useRouter();
-
-    let cartItems = useContext(cartContext);
+    const { cartItems, addCartItems, removeCartItems } = useContext(cartContext);
 
     return (
         <div 
         className="w-full h-full border border-white" 
-        onClick={() => {router.push(`/products/${props.id}`)}}>
+        >
             <img
             src={images[imageIndex]}
             alt={title}
@@ -40,12 +39,23 @@ const ProductComponent: React.FC<Product> = ({title, images, price, ...props}: P
                 <strong className="text-2xl">{title}</strong>
                 <p className="text-2xl">${price}</p>
             </div>
-            <button
-            className="h-[10%] aspect-[20/4] bg-green-800"
-            onClick={() => {cartItems.push({title, images, price, ...props})}}
-            >
-                Add to cart...
-            </button>
+            <div className="flex h-[10%] gap-5 fit ml-[5%] mr-0">
+                <button
+                className="h-full aspect-[25/15] border border-white rounded-xl"
+                onClick={(e) => {
+                    addCartItems({ title, images, price, ...props });
+                    console.log("item added", title);
+                }}
+                >
+                    Add to cart...
+                </button>
+                <button
+                className="h-full aspect-[25/15] border border-white rounded-xl"
+                onClick={(e) => { console.log("go clicked"); router.push(`/products/${props.id}`) }}
+                >
+                    Go to page
+                </button>
+            </div>
         </div>
     );
 }

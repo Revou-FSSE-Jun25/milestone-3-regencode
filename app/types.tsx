@@ -6,7 +6,7 @@ export interface Category {
     image: string,
     name: string,
     slug: string,
-    updatedAt: Date,
+    updatedAt: string | Date,
 }
 
 export interface Product {
@@ -18,6 +18,5 @@ export interface Product {
     price: number,
     slug: string,
     title: string,
-    updatedAt: Date
+    updatedAt: string | Date, 
 }
-

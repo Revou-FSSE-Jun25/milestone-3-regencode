@@ -1,5 +1,5 @@
 "use client";
-import React, { Context } from "react";
+import React, { Context, useCallback } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import Header from "./components/Header";
 import { Product } from "./types";
@@ -11,17 +11,61 @@ export interface HomePageProps {
     carouselProducts?: Array<Product>
 }
 
-export const cartContext = createContext<Array<Product>>([]);
+export interface CartContextType {
+  cartItems: Map<number, number>;
+  addCartItems: (product: Product) => void;
+  removeCartItems: (target: Product) => void;
+};
+
+export const cartContext = createContext<CartContextType>({
+  cartItems: new Map<number, number>(),
+  addCartItems: () => {},
+  removeCartItems: () => {},
+});
 
 export const ClientView : React.FC<HomePageProps> = ({ products, carouselProducts }: HomePageProps) => {
     const [carouselIndex, setCarouselIndex] = useState<number>(0);
     const [carouselProduct, setCarouselProduct] = useState<Product>();
-    const [cartItems, setCartItems] = useState<Array<Product>>([]);
-
+    const [cartItems, setCartItems] = useState<Map<number, number>>(new Map());
     const [isCartModalOpen, setIsCartModalOpen] = useState<boolean>(false);
 
-    const toggleCartModal = () => {
-        setIsCartModalOpen(!isCartModalOpen);
+    const handleCartOpen = () => {
+        console.log("cart is open:", isCartModalOpen);
+        console.log("cart", cartItems); 
+        setIsCartModalOpen(!isCartModalOpen);    
+    }
+
+    const addCartItems = (newProduct : Product) => {
+        setCartItems(prev => {
+            const newMap = new Map(prev);
+            const id = parseInt(String(newProduct.id))
+            if(newMap.has(id)) {
+                newMap.set(id, newMap.get(id)! + 1);
+            }
+            else {
+                newMap.set(id, 1);
+            }
+            return newMap;
+        });
+        console.log("cart", cartItems);
+    }
+    const removeCartItems = (target : Product) => {
+        setCartItems(prev => {
+            const newMap = new Map(prev);
+            const id = parseInt(String(target.id))
+            if(newMap.has(id)) {
+                newMap.set(id, newMap.get(id)! - 1);
+            }
+            else {
+                console.error("Cannot remove non existing product from cart!", target);
+                return newMap;
+            }
+            if(newMap.get(id)! <= 0) {
+                newMap.delete(id)
+            }
+            return newMap;
+        });
+        console.log("cart", cartItems);
     }
 
     if(carouselProducts){
@@ -32,9 +76,9 @@ export const ClientView : React.FC<HomePageProps> = ({ products, carouselProduct
     }
     return (
         <cartContext.Provider
-        value={ cartItems }
+        value={{ cartItems, addCartItems, removeCartItems }}
         >
-            <Header toggleCartModal={toggleCartModal}/>
+            <Header toggleCartModal={handleCartOpen} /> 
             { isCartModalOpen ? <HeaderCartModal /> : false }
             <section className="border border-white w-[70vw] min-w-[400px] h-[50vh] mx-auto my-5 overflow-hidden">
             { carouselProduct ? <ProductComponent key={carouselProduct.id} {...carouselProduct} /> : false }
