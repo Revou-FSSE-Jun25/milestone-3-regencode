@@ -3,10 +3,13 @@ import { cartContext } from "@/app/ClientView";
 import { Product } from "@/app/types";
 import React from "react";
 import { useContext } from "react";
+import Header from "@/app/components/Header";
 
 const ClientView = ({ ...product }: Product) => {
     const { cartItems, addCartItems, removeCartItems }= useContext(cartContext);
     return (
+        <>
+        <Header toggleCartModal={() => {}}/>
         <section className="w-[85vw] mx-auto my-5">
             <div className="flex flex-col w-full h-[55vh] md:h-[65vh] lg:h-[90vh]"> 
                 <h1 className="text-6xl font-bold mb-5">{product.title}</h1>
@@ -44,6 +47,7 @@ const ClientView = ({ ...product }: Product) => {
                 </div>
             </section>
         </section>
+        </>
     );
 }
 

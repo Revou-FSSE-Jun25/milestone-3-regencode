@@ -1,6 +1,5 @@
 import React from "react";
 import { getProductById } from "@/app/utils";
-import Header from "@/app/components/Header";
 import ClientView from "./ClientView";
 
 interface DynamicPageProps {
@@ -15,7 +14,6 @@ export default async function Page({ params }: DynamicPageProps) {
 
     return (
         <>
-        <Header />
         <ClientView {...product}/>
         </>
     );
