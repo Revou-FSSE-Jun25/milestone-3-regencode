@@ -3,7 +3,8 @@ import React, { useState, useContext } from "react";
 import { Product } from "../types";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { cartContext } from "../ClientView";
+import { useCart } from "../contexts/CartContext";
+
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
 
@@ -21,10 +22,10 @@ export interface Product {
 }
 */
 
-const CarouselProductComponent: React.FC<Product> = ({title, images, price, ...props}: Product) => {
+const CarouselProductComponent: React.FC<Product> = ({id, title, images, price, ...props}: Product) => {
     const [imageIndex, setImageIndex] = useState(0);
     const router = useRouter();
-    const { cartItems, addCartItems, removeCartItems } = useContext(cartContext);
+    const { storage, addItem, removeItem } = useCart();
 
     return (
         <div 
@@ -43,8 +44,7 @@ const CarouselProductComponent: React.FC<Product> = ({title, images, price, ...p
                 <button
                 className="h-full aspect-[25/10] border border-white rounded-xl"
                 onClick={(e) => {
-                    addCartItems({ title, images, price, ...props });
-                    console.log("item added", title);
+                    addItem({ id, title, images, price, ...props });
                 }}
                 >
                     Add to cart...

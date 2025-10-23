@@ -1,16 +1,19 @@
 "use client";
-import { cartContext } from "@/app/ClientView";
+import { useCart } from "@/app/contexts/CartContext";
 import { Product } from "@/app/types";
 import React from "react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Header from "@/app/components/Header";
+import HeaderCartModal from "@/app/components/HeaderCartModal";
 
 const ClientView = ({ ...product }: Product) => {
-    const { cartItems, addCartItems, removeCartItems }= useContext(cartContext);
+    const { storage, addItem, removeItem }= useCart();
+    const [isCartModalOpen, setIsCartModalOpen] = useState<boolean>(false);
     return (
         <>
-        <Header toggleCartModal={() => {}}/>
-        <section className="w-[85vw] mx-auto my-5">
+        { isCartModalOpen ? <HeaderCartModal toggleCartModal={() => {setIsCartModalOpen(false)}} /> : false }
+        <Header toggleCartModal={() => {setIsCartModalOpen(!isCartModalOpen)}}/>
+        <section className="w-[85vw] mx-auto my-5 mt-[12vh]">
             <div className="flex flex-col w-full h-[55vh] md:h-[65vh] lg:h-[90vh]"> 
                 <h1 className="text-6xl font-bold mb-5">{product.title}</h1>
                 <img 
@@ -23,7 +26,7 @@ const ClientView = ({ ...product }: Product) => {
                         <button className="border border-white mx-5">Share</button>
                         <button 
                         className="border border-white"
-                        onClick={(e) => {addCartItems(product)}}>Add to Cart</button>
+                        onClick={(e) => {addItem(product)}}>Add to Cart</button>
                     </div>
                 </section>
             </div>
