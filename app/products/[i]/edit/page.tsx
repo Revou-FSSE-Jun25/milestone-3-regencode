@@ -15,7 +15,7 @@ export default async function Page({ params }: DynamicPageProps) {
     
     return (
         <>
-            <ClientView {...product} />
+            <ClientView id={parseInt(resolvedParams.i)} product={product} />
         </>
     );
 

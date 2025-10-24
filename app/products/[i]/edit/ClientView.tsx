@@ -8,8 +8,12 @@ import { updateProduct, UpdateProductForm } from "@/app/utils";
 import { useProductList } from "@/app/contexts/ProductListContext";
 import { useState } from "react";
 
+interface Props {
+    id: number,
+    product: Product,
+}
 
-const ClientView = ({ ...product }: Product) => {
+const ClientView = ({ id, product }: Props) => {
     const router = useRouter();
 
     const [title, setTitle] = useState("");
@@ -25,7 +29,7 @@ const ClientView = ({ ...product }: Product) => {
             description: desc,
             categoryId: 1,
         }
-        const res = await updateProduct(parseInt(product.id), productForm);
+        const res = await updateProduct(id, productForm);
         console.log("create product response", res);
         return res;
     }
@@ -44,7 +48,7 @@ const ClientView = ({ ...product }: Product) => {
                 <button onClick={() => router.back()}>
                     <FontAwesomeIcon icon={faArrowLeft} />
                 </button> 
-                <h1 className="text-3xl text-center"> Edit product id:{product.id}</h1>
+                <h1 className="text-3xl text-center"> Edit product id:{id}</h1>
                 <div></div>
             </section>
             <form onSubmit={handleSubmit}

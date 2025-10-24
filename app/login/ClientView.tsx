@@ -74,7 +74,7 @@ const ClientView = () => {
                     <label className="text-3xl" htmlFor="credentials-password"> 
                         Password
                         <input 
-                        type="text" 
+                        type="password" 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         name="password"

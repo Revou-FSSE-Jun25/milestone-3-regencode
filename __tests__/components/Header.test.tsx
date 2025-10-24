@@ -44,11 +44,16 @@ describe('header tests', () => {
         fireEvent.click(cartButton);
         expect(toggleCartModal).toHaveBeenCalledTimes(1);
     });
-    it("redirects to login page when login button is clicked", () => {
-        render(<Header />);
-        const loginButton = screen.getByRole("button", { name: /login-button/i });
+    it("redirects to login page when user button is clicked while not logged in", () => {
 
-        fireEvent.click(loginButton);
+        Object.defineProperty(document, "cookie", {
+          writable: true,
+          value: "",
+        });
+        render(<Header />);
+        const userButton = screen.getByRole("button", { name: /user-button/i });
+
+        fireEvent.click(userButton);
         expect(push).toHaveBeenCalledWith("/login/");
     });
 });

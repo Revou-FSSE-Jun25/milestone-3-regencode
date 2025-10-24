@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Product, CartProduct } from "../types";
 
-
 export const useLocalStorage = () => {
+    const [storage, _setStorage] = useState<Map<string, string>>(new Map());
+
     const getItemsFromStorage = () => {
         let newMap = new Map<string, string>();
         console.log(localStorage.length);
@@ -14,14 +15,13 @@ export const useLocalStorage = () => {
         for(let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i)!
             const value = localStorage.getItem(key)!;
-            newMap.set(key, value);
+            newMap.set(key.toString(), value);
         }
         return newMap;
     }
-    const [storage, _setStorage] = useState<Map<string, string>>(new Map());
 
     const addItem = (product: Product) => {
-        const id = product.id;
+        const id = product.id.toString();
         _setStorage((prev) => {
             const newMap = new Map(prev)
             const existing = prev.get(id);
@@ -49,7 +49,7 @@ export const useLocalStorage = () => {
     }
 
     const removeItem = (product: Product) => {
-        const id = product.id;
+        const id = product.id.toString();
         _setStorage((prev) => {
             const existing = prev.get(id);
             if(existing) {

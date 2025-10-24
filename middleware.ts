@@ -22,6 +22,9 @@ export function middleware(request: NextRequest) {
        loginUrl.searchParams.set("redirect", pathname);
        return NextResponse.redirect(loginUrl);
     }
+    if (pathname.startsWith("/login")) {
+        return NextResponse.redirect("/");
+    }
 
     //if have token but not have the user role cannot enter
     if (pathname.startsWith("/admin") && userRole !== "admin") {
