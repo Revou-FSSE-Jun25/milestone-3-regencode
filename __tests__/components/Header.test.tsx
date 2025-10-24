@@ -26,7 +26,7 @@ describe('header tests', () => {
 
         expect(screen.getByRole("link", { name: /faq-button/i })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: /cart-button/i })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /login-button/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /user-button/i })).toBeInTheDocument();
     });
 
     it("does not render cart button when toggleCartModal is undefined", () => { render(<Header />);
@@ -44,16 +44,11 @@ describe('header tests', () => {
         fireEvent.click(cartButton);
         expect(toggleCartModal).toHaveBeenCalledTimes(1);
     });
-    it("redirects to login page when user button is clicked while not logged in", () => {
-
-        Object.defineProperty(document, "cookie", {
-          writable: true,
-          value: "",
-        });
+    it("goes to user page when user button is clicked", () => {
         render(<Header />);
         const userButton = screen.getByRole("button", { name: /user-button/i });
 
         fireEvent.click(userButton);
-        expect(push).toHaveBeenCalledWith("/login/");
+        expect(push).toHaveBeenCalledWith("/user/");
     });
 });

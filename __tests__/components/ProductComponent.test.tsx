@@ -1,89 +1,136 @@
-import '@testing-library/jest-dom'
-import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react'
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import ProductComponent from "../../app/components/ProductComponent";
+import { Product } from "@/app/types";
 import { useRouter } from "next/navigation";
-import { Category, Product } from '@/app/types';
-import { useContext } from 'react';
+import { useCart } from "../../app/contexts/CartContext";
+import { useAuth } from "../../app/contexts/AuthContext";
+import { useProductList } from "../../app/contexts/ProductListContext";
+import { deleteProduct } from "../../app/utils";
 
+// ---- MOCKS ----
 const pushMock = jest.fn();
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: pushMock,
   }),
 }));
 
-const mockAddItem = jest.fn();
-jest.mock('../../app/contexts/CartContext', () => {
-  const React = require('react');
-  return {
-    CartContext: React.createContext({
-      storage: new Map(),
-      addItem: (...args: any[]) => mockAddItem(...args),
-      removeItem: jest.fn(),
-    }),
-  };
-});
+const addItemMock = jest.fn();
+jest.mock("../../app/contexts/CartContext", () => ({
+  useCart: () => ({
+    storage: new Map(),
+    addItem: addItemMock,
+    removeItem: jest.fn(),
+  }),
+}));
 
-import ProductComponent from '@/app/components/ProductComponent'
+const removeProductMock = jest.fn();
+jest.mock("../../app/contexts/ProductListContext", () => ({
+  useProductList: () => ({
+    productList: [],
+    addProduct: jest.fn(),
+    removeProduct: removeProductMock,
+    setProductList: jest.fn(),
+  }),
+}));
 
+jest.mock("../../app/utils", () => ({
+  deleteProduct: jest.fn(),
+}));
+
+// Utility to mock Auth
+const mockUseAuth = (user: any) => {
+  (useAuth as jest.Mock).mockReturnValue({
+    user,
+    login: jest.fn(),
+    logout: jest.fn(),
+    cookieLogin: jest.fn(),
+  });
+};
+
+jest.mock("../../app/contexts/AuthContext", () => ({
+  useAuth: jest.fn(),
+}));
+
+// ---- TESTS ----
 describe("ProductComponent", () => {
-
-    const mockCategory : Category = {
-        creationAt: "321312",
-        id: "1",
-        image: "img1.jpg",
-        name: "shirt",
+  const baseProduct : Product = {
+    id: "1",
+    title: "Test Product",
+    price: 100,
+    images: ["test-image.jpg"],
+    category: {
+        creationAt: "32131",
+        id: 21,
+        image: "s.jpg",
+        name: "a",
         slug: "a",
-        updatedAt: "aaa",
+        updatedAt: "dasd",
+    },
+    creationAt: "32132",
+    description: "a",
+    updatedAt: "32123",
+    slug: "e",
 
-    }
-    const mockProduct : Product = {
-        id: "1",
-        title: "Cool T-Shirt",
-        images: ["image1.jpg", "image2.jpg"],
-        price: 25,
-        description: "A cool shirt",
-        category: mockCategory,
-        creationAt: "aaa",
-        slug: "aaa",
-        updatedAt: "aaa",
-    };
+  };
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    it("renders product title, image, and price", () => {
-        render(<ProductComponent {...mockProduct} />);
+  it("renders product title, price, and image", () => {
+    mockUseAuth(null);
+    render(<ProductComponent {...baseProduct} />);
+    expect(screen.getByText("Test Product")).toBeInTheDocument();
+    expect(screen.getByText("$100")).toBeInTheDocument();
+    expect(screen.getByAltText("Test Product")).toHaveAttribute("src", "test-image.jpg");
+  });
 
-        // Check that title and price are displayed
-        expect(screen.getByText(/cool t-shirt/i)).toBeInTheDocument();
-        expect(screen.getByText(/\$25/)).toBeInTheDocument();
+  it("navigates to product page on 'Go to page' click", () => {
+    mockUseAuth(null);
+    render(<ProductComponent {...baseProduct} />);
+    fireEvent.click(screen.getByText("Go to page"));
+    expect(pushMock).toHaveBeenCalledWith("/products/1");
+  });
 
-        // Image rendered with correct alt and src
-        const img = screen.getByRole("img", { name: /cool t-shirt/i });
-        expect(img).toHaveAttribute("src", "image1.jpg");
-    });
+  it("calls addItem when add-to-cart button is clicked", () => {
+    mockUseAuth(null);
+    render(<ProductComponent {...baseProduct} />);
+    fireEvent.click(screen.getByLabelText("add-to-cart"));
+    expect(addItemMock).toHaveBeenCalledWith(expect.objectContaining({ title: "Test Product", id: "1" }));
+  });
 
-    it("calls addItem when 'Add to cart' button is clicked", () => {
-        render(<ProductComponent {...mockProduct} />);
+  it("renders edit and delete buttons for admin user", () => {
+    mockUseAuth({ isAdmin: true });
+    render(<ProductComponent {...baseProduct} />);
+    expect(screen.getAllByRole("button").length).toBeGreaterThanOrEqual(4); // Go, Cart, Edit, Delete
+  });
 
-        const addBtn = screen.getByRole("button", { name: /add-to-cart/i });
-        fireEvent.click(addBtn);
+  it("does not render edit/delete buttons for non-admin user", () => {
+    mockUseAuth({ isAdmin: false });
+    render(<ProductComponent {...baseProduct} />);
+    expect(screen.queryByTestId("fa-edit")).not.toBeInTheDocument();
+  });
 
-        expect(mockAddItem).toHaveBeenCalledTimes(1);
-        expect(mockAddItem).toHaveBeenCalledWith(expect.objectContaining({
-            title: "Cool T-Shirt",
-            price: 25,
-        }));
-    });
+  it("navigates to edit page when edit button is clicked (admin)", () => {
+    mockUseAuth({ isAdmin: true });
+    render(<ProductComponent {...baseProduct} />);
+    const editButton = screen.getAllByRole("button").find((b) => b.innerHTML.includes("svg"));
+    fireEvent.click(editButton!);
+    expect(pushMock).toHaveBeenCalledWith("/products/1/edit");
+  });
 
-    it("navigates when 'Go to page' button is clicked", () => {
-        render(<ProductComponent {...mockProduct} />);
+  it("calls deleteProduct and removeProduct when delete button is clicked (admin)", async () => {
+    (deleteProduct as jest.Mock).mockResolvedValueOnce("deleted!");
+    mockUseAuth({ isAdmin: true });
+    render(<ProductComponent {...baseProduct} />);
 
-        const goBtn = screen.getByRole("button", { name: /go to page/i });
-        fireEvent.click(goBtn);
+    const buttons = screen.getAllByRole("button");
+    const deleteButton = buttons[buttons.length - 1];
+    fireEvent.click(deleteButton);
 
-        expect(pushMock).toHaveBeenCalledWith("/products/1");
-    });
+    expect(deleteProduct).toHaveBeenCalledWith("1");
+    expect(removeProductMock).toHaveBeenCalledWith("1");
+  });
 });
