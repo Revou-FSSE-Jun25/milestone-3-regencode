@@ -22,7 +22,6 @@ export const useLocalStorage = () => {
 
     const addItem = (product: Product) => {
         const id = product.id;
-        console.log(storage);
         _setStorage((prev) => {
             const newMap = new Map(prev)
             const existing = prev.get(id);
@@ -44,7 +43,7 @@ export const useLocalStorage = () => {
                 localStorage.setItem(id, newProduct);
                 newMap.set(id, newProduct);
             }
-
+            console.log("updated storage", newMap); 
             return newMap;
         });
     }

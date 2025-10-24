@@ -17,7 +17,7 @@ const ClientView = ({ ...product }: Product) => {
             <div className="flex flex-col w-full h-[55vh] md:h-[65vh] lg:h-[90vh]"> 
                 <h1 className="text-6xl font-bold mb-5">{product.title}</h1>
                 <img 
-                src={product.images[0]} 
+                src={product.images ? product.images[0] : "https://placehold.co/600x400"} 
                 className="grow object-cover overflow-hidden"
                 />
                 <section className="h-fit text-5xl font-bold my-5 flex justify-between">
@@ -39,7 +39,7 @@ const ClientView = ({ ...product }: Product) => {
                     Category
                     </div>
                     <div className="h-full w-full border border-white">
-                    {product.category.name}
+                    {product.category ? product.category.name : "none"}
                     </div>
                     <div className="h-full w-full border border-white font-bold">
                     Last Updated 

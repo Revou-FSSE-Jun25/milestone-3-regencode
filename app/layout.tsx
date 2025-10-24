@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import {  CartProvider } from "./contexts/CartContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ProductListProvider } from "./contexts/ProductListContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,14 +28,16 @@ export default function RootLayout({
     return (
         <html lang="en">
             <AuthProvider>
-                <CartProvider>
-                    <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                        {children}
-                        <footer className="border-t border-white">
-                            2025. Made by Thomas Gozalie.
-                        </footer>
-                    </body>
-                </CartProvider>
+                <ProductListProvider>
+                    <CartProvider>
+                        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                            {children}
+                            <footer className="border-t border-white">
+                                2025. Made by Thomas Gozalie.
+                            </footer>
+                        </body>
+                    </CartProvider>
+                </ProductListProvider>
             </AuthProvider>
         </html>
     );

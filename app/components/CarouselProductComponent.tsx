@@ -22,7 +22,7 @@ export interface Product {
 }
 */
 
-const CarouselProductComponent: React.FC<Product> = ({id, title, images, price, ...props}: Product) => {
+const CarouselProductComponent: React.FC<Product> = ({title, images, price, ...props}: Product) => {
     const [imageIndex, setImageIndex] = useState(0);
     const router = useRouter();
     const { storage, addItem, removeItem } = useCart();
@@ -44,7 +44,7 @@ const CarouselProductComponent: React.FC<Product> = ({id, title, images, price, 
                 <button
                 className="h-full aspect-[25/10] border border-white rounded-xl"
                 onClick={(e) => {
-                    addItem({ id, title, images, price, ...props });
+                    addItem({ title, images, price, ...props });
                 }}
                 >
                     Add to cart...

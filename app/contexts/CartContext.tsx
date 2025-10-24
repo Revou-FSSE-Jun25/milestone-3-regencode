@@ -18,7 +18,6 @@ export const CartContext = createContext<CartContextType>({
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [cart, setCart] = useState<Map<string, string>>(new Map());
-    const [totalCost, setTotalCost] = useState<number>(0);
     const { storage, addItem, removeItem } = useLocalStorage();
 
     return (

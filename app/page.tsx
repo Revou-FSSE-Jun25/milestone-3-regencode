@@ -8,7 +8,7 @@ export default async function Home() {
     
     const carouselProducts = await getProducts(3, 10);
     const products = await getProducts(12);
-
+    
     console.log("product", products);
     return (
         <>
